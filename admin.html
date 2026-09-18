@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <title>SUS Farma - Admin</title>
+  <link rel="stylesheet" href="globals.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mobile-screen">
+    <div>
+      <div class="admin-header">
+        <div>
+          <div class="title">Painel de Controle</div>
+          <div class="subtitle">Atualize o estoque rapidamente</div>
+        </div>
+        <a href="index.html" class="logout-btn">Sair</a>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-title">TOTAL</div>
+          <div id="total-val" class="stat-val">0</div>
+        </div>
+        <div class="stat-card-2">
+          <div class="stat-title">ESTOQUE</div>
+          <div id="estoque-val" class="stat-val">0</div>
+        </div>
+        <div class="stat-card-3">
+          <div class="stat-title">FORA</div>
+          <div id="fora-val" class="stat-val">0</div>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <div id="admin-list" class="admin-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { escutarMedicamentos, alternarStatusEstoque } from './app.js';
+
+    const container = document.getElementById('admin-list');
+
+    escutarMedicamentos((medicamentos) => {
+      container.innerHTML = '';
+      
+      document.getElementById('total-val').innerText = medicamentos.length;
+      document.getElementById('estoque-val').innerText = medicamentos.filter(m => m.disponivel).length;
+      document.getElementById('fora-val').innerText = medicamentos.filter(m => !m.disponivel).length;
+
+      medicamentos.forEach(med => {
+        const div = document.createElement('div');
+        div.className = 'div-5';
+        div.innerHTML = `
+          <div>
+            <div class="med-name">${med.nome}</div>
+            <div class="med-cat" style="font-weight: 600; color: ${med.disponivel ? '#10b981' : '#ef4444'}">${med.disponivel ? 'ESTOQUE' : 'FORA'}</div>
+          </div>
+          <div class="toggle-btn ${med.disponivel ? 'em-estoque' : 'fora'}" data-id="${med.id}" data-status="${med.disponivel}">
+            <div class="toggle-knob"></div>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          const statusAtual = btn.getAttribute('data-status') === 'true';
+          await alternarStatusEstoque(id, statusAtual);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

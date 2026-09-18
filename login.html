@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <title>SUS Farma - Login</title>
+  <link rel="stylesheet" href="globals.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mobile-screen" style="justify-content: center;">
+    <div class="form-container">
+      <div class="medical-icon">🛡️</div>
+      <div>
+        <div class="login-title">Acesso Administrativo</div>
+        <p class="login-subtitle">Sistema de Gestão de Medicamentos</p>
+      </div>
+
+      <form id="login-form" class="fields-card">
+        <div>
+          <div class="label">USUÁRIO</div>
+          <div class="input-box">
+            <input type="text" value="profissional.ubs" required>
+          </div>
+        </div>
+        <div>
+          <div class="label">SENHA</div>
+          <div class="input-box">
+            <input type="password" value="123456" required>
+          </div>
+        </div>
+        <button type="submit" class="entrar-btn">Entrar no Sistema</button>
+      </form>
+    </div>
+
+    <div class="bottom-disclaimer">
+      <p>Acesso restrito aos profissionais da UBS. Caso não tenha credenciais, contate a gerência.</p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      window.location.href = 'admin.html';
+    });
+  </script>
+</body>
+</html>

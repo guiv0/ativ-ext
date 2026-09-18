@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8" />
+  <title>SUS Farma - Consulta</title>
+  <link rel="stylesheet" href="globals.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mobile-screen">
+    <div>
+      <header class="header">
+        <div class="div-3">
+          <div class="logo-placeholder">💊</div>
+          <div>
+            <div class="title">SUS Farma</div>
+            <div class="subtitle">UBS Vila Esperança</div>
+          </div>
+        </div>
+        <a href="login.html" class="accessibility-btn">Admin</a>
+      </header>
+
+      <div class="hero-search">
+        <div class="heading">Consulta de Medicamentos</div>
+        <p class="instructions">Consulte a disponibilidade de remédios fornecidos gratuitamente pela UBS em tempo real.</p>
+        <div class="search-bar">
+          <input type="text" id="campo-busca" placeholder="Digite o nome do medicamento...">
+        </div>
+      </div>
+
+      <div class="results-section">
+        <div class="list-title">RESULTADOS DA BUSCA</div>
+        <div id="lista-medicamentos" class="medication-list">
+          <p style="text-align: center; color: #64748b;">Carregando...</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-info-card">
+      <div class="card-title">UBS Vila Esperança</div>
+      <p class="text-wrapper-2">📍 Rua das Flores, 123 - Centro, Timbiras/MA</p>
+      <p class="text-wrapper-2">🕒 Seg a Sex: 7h às 17h</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { escutarMedicamentos } from './app.js';
+
+    const container = document.getElementById('lista-medicamentos');
+    const campoBusca = document.getElementById('campo-busca');
+    let listaCompleta = [];
+
+    function renderizar(lista) {
+      container.innerHTML = '';
+      if (lista.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#64748b;">Nenhum medicamento encontrado.</p>';
+        return;
+      }
+
+      lista.forEach(med => {
+        const div = document.createElement('div');
+        div.className = 'div-5';
+        div.innerHTML = `
+          <div>
+            <div class="med-name">${med.nome}</div>
+            <div class="med-cat">Disponível na farmácia</div>
+          </div>
+          <div class="status-badge ${med.disponivel ? '' : 'indisponivel'}">
+            ${med.disponivel ? 'Em estoque' : 'Indisponível'}
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    escutarMedicamentos((dados) => {
+      listaCompleta = dados;
+      renderizar(listaCompleta);
+    });
+
+    campoBusca.addEventListener('input', (e) => {
+      const termo = e.target.value.toLowerCase();
+      renderizar(listaCompleta.filter(m => m.nome.toLowerCase().includes(termo)));
+    });
+  </script>
+</body>
+</html>
